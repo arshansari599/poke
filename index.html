@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="form">
+        <input class="message" type="text" placeholder="Enter your message">
+        <button class="publish">publish</button>
+        <div class="show">
+            <!-- Messages will be displayed here -->
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-auth-domain",
+            databaseURL: "https://your-database-url.firebaseio.com",
+            projectId: "your-project-id",
+            storageBucket: "your-storage-bucket",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id",
+            measurementId: "your-measurement-id"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // DOM elements
+        const messageInput = document.querySelector('.message');
+        const publishButton = document.querySelector('.publish');
+        const showDiv = document.querySelector('.show');
+
+        // Function to handle publishing message
+        function publishMessage() {
+            const messageText = messageInput.value.trim();
+
+            if (messageText === '') {
+                alert('Please enter a message');
+                return;
+            }mmgi
+
+            // Save message to Firebase Database
+            const messagesRef = database.ref('messages');
+            const newMessageRef = messagesRef.push();
+            newMessageRef.set({
+                message: messageText,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            // Display message in the show div
+            const messageElement = document.createElement('div');
+            messageElement.textContent = messageText;
+            showDiv.appendChild(messageElement);
+
+            // Clear input field after publishing
+            messageInput.value = '';
+        }
+
+        // Event listener for publish button
+        publishButton.addEventListener('click', publishMessage);
+    </script>
+</body>
+</html>
